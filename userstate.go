@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	db "github.com/terminar/simplesqlite" // SQLite database wrapper
+	db "github.com/xyproto/simplesqlite_noc" // SQLite database wrapper
 	"github.com/xyproto/cookie/v2"        // For cookies
 	"github.com/xyproto/pinterface"       // For interfaces
 )
