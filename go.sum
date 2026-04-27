@@ -1,0 +1,14 @@
+github.com/mattn/go-sqlite3 v1.14.42 h1:MigqEP4ZmHw3aIdIT7T+9TLa90Z6smwcthx+Azv4Cgo=
+github.com/mattn/go-sqlite3 v1.14.42/go.mod h1:pjEuOr8IwzLJP2MfGeTb0A35jauH+C2kbHKBr7yXKVQ=
+github.com/terminar/simplesqlite v0.0.0-20240811163019-f2a6c3cbea17 h1:U0VeWu6VRL89XH3/0HobGgQFaRaHF2MZIj9LMYhZ3Ng=
+github.com/terminar/simplesqlite v0.0.0-20240811163019-f2a6c3cbea17/go.mod h1:7E7W7YEEPtLF8gSwgXz4pRxCkqAfY0Om79qABbVZ1NE=
+github.com/xyproto/cookie/v2 v2.2.7 h1:0Cj72/1ftzP0E/ca52YrF6RNyhMyCvl7fjPcvwsr9fE=
+github.com/xyproto/cookie/v2 v2.2.7/go.mod h1:wW8OiGxgIP7knzx9qZYA1NkicfCYDo/T0QyxUZ5Sd3o=
+github.com/xyproto/env/v2 v2.5.6 h1:ZDhM5caXmM0/Bjf4BHd3QkC6p0g0aXAtTwpBOS4sxyU=
+github.com/xyproto/env/v2 v2.5.6/go.mod h1:F81ZEzu15s3TWUZJ1uzBl9iNeq9zcfHvxMkQJaLZUl0=
+github.com/xyproto/pinterface v1.5.4 h1:u7bVqjJIlZ5+FDFrVfLmOgL38XGXt7R+xkLsfiSGDEQ=
+github.com/xyproto/pinterface v1.5.4/go.mod h1:X5B5pKE49ak7SpyDh5QvJvLH9cC9XuZNDcl5hEyYc34=
+github.com/xyproto/randomstring v1.2.0 h1:y7PXAEBM3XlwJjPG2JQg4voxBYZ4+hPgRdGKCfU8wik=
+github.com/xyproto/randomstring v1.2.0/go.mod h1:rgmS5DeNXLivK7YprL0pY+lTuhNQW3iGxZ18UQApw/E=
+golang.org/x/crypto v0.50.0 h1:zO47/JPrL6vsNkINmLoo/PH1gcxpls50DNogFvB5ZGI=
+golang.org/x/crypto v0.50.0/go.mod h1:3muZ7vA7PBCE6xgPX7nkzzjiUq87kRItoJQM1Yo8S+Q=
