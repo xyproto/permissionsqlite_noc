@@ -65,3 +65,9 @@ venv/
 
 # Rust
 target/
+
+# Test database
+sqlite.db
+
+# cmd/http example program
+cmd/http/http
