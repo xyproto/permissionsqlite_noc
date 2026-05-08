@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/xyproto/permissionsqlite_noc"
-	"github.com/xyproto/pinterface"
+	"github.com/xyproto/pinterface/v2"
 )
 
 type permissionHandler struct {
