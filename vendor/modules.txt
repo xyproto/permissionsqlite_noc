@@ -8,7 +8,7 @@ github.com/ncruces/go-sqlite3/internal/sqlite3_wrap
 github.com/ncruces/go-sqlite3/internal/testenv
 github.com/ncruces/go-sqlite3/internal/util
 github.com/ncruces/go-sqlite3/vfs
-# github.com/ncruces/go-sqlite3-wasm/v2 v2.1.35300
+# github.com/ncruces/go-sqlite3-wasm/v2 v2.2.35301
 ## explicit; go 1.25.0
 github.com/ncruces/go-sqlite3-wasm/v2
 # github.com/ncruces/julianday v1.0.0
@@ -20,20 +20,20 @@ github.com/xyproto/cookie/v2
 # github.com/xyproto/env/v2 v2.5.6
 ## explicit; go 1.19
 github.com/xyproto/env/v2
-# github.com/xyproto/pinterface v1.5.4
+# github.com/xyproto/pinterface/v2 v2.1.2
 ## explicit; go 1.8
-github.com/xyproto/pinterface
+github.com/xyproto/pinterface/v2
 # github.com/xyproto/randomstring v1.2.0
 ## explicit; go 1.17
 github.com/xyproto/randomstring
-# github.com/xyproto/simplesqlite_noc v1.1.0
+# github.com/xyproto/simplesqlite_noc v1.2.0
 ## explicit; go 1.25.0
 github.com/xyproto/simplesqlite_noc
 # golang.org/x/crypto v0.50.0
 ## explicit; go 1.25.0
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
-# golang.org/x/sys v0.43.0
+# golang.org/x/sys v0.44.0
 ## explicit; go 1.25.0
 golang.org/x/sys/unix
 golang.org/x/sys/windows
