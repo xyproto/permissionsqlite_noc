@@ -119,9 +119,13 @@ func (perm *Permissions) Rejected(w http.ResponseWriter, req *http.Request) bool
 	// If it's not "/" and set to be public regardless of permissions
 	if !(perm.rootIsPublic && path == "/") {
 
+		// Make sure to compare paths in a case-insensitive way,
+		// because some operating systems uses case-insensitive filesystems.
+		lowerPath := strings.ToLower(path)
+
 		// Reject if it is an admin page and user does not have admin permissions
 		for _, prefix := range perm.adminPathPrefixes {
-			if strings.HasPrefix(path, prefix) {
+			if strings.HasPrefix(lowerPath, strings.ToLower(prefix)) {
 				if !perm.state.AdminRights(req) {
 					reject = true
 					break
@@ -132,7 +136,7 @@ func (perm *Permissions) Rejected(w http.ResponseWriter, req *http.Request) bool
 		if !reject {
 			// Reject if it's a user page and the user does not have user rights
 			for _, prefix := range perm.userPathPrefixes {
-				if strings.HasPrefix(path, prefix) {
+				if strings.HasPrefix(lowerPath, strings.ToLower(prefix)) {
 					if !perm.state.UserRights(req) {
 						reject = true
 						break
@@ -145,7 +149,7 @@ func (perm *Permissions) Rejected(w http.ResponseWriter, req *http.Request) bool
 			// Reject if it's not a public page
 			found := false
 			for _, prefix := range perm.publicPathPrefixes {
-				if strings.HasPrefix(path, prefix) {
+				if strings.HasPrefix(lowerPath, strings.ToLower(prefix)) {
 					found = true
 					break
 				}
