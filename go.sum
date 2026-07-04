@@ -1,7 +1,7 @@
-github.com/ncruces/go-sqlite3 v0.34.0 h1:q2I6wHTLWIoz6ehYkKdG5dGQc66eJv7ZGnekhvuMfK8=
-github.com/ncruces/go-sqlite3 v0.34.0/go.mod h1:qpBxsSdGPnO9K5OExuv5GEsrGQ7Rk6JsJFH6wn2DwwU=
-github.com/ncruces/go-sqlite3-wasm/v2 v2.2.35301 h1:PPb3vECU21cZr2CrzYG7idXLBpWETDcdVEnXg3vqRpM=
-github.com/ncruces/go-sqlite3-wasm/v2 v2.2.35301/go.mod h1:q34C+veYmxQ7XRFgCKSeD6hq5vP/C517Hkl4iu+A5ao=
+github.com/ncruces/go-sqlite3 v0.35.1 h1:h/LaVyQwIvBBT0+2JmVe2tbYyWjUQ093/pYhpBqdxJo=
+github.com/ncruces/go-sqlite3 v0.35.1/go.mod h1:fXOSIkWwN5NXgbJk+7Zls8QIW4xOflmgh11OFvcY+J0=
+github.com/ncruces/go-sqlite3-wasm/v3 v3.1.35302 h1:Cew7/eNAMd1zhpXYBjofBua/63pFvbvB2h4PM/p6gKU=
+github.com/ncruces/go-sqlite3-wasm/v3 v3.1.35302/go.mod h1:xe0CfafDUxfh+fSVKjHHMiAxoG9KALt5nFtbGNb/jRs=
 github.com/ncruces/julianday v1.0.0 h1:fH0OKwa7NWvniGQtxdJRxAgkBMolni2BjDHaWTxqt7M=
 github.com/ncruces/julianday v1.0.0/go.mod h1:Dusn2KvZrrovOMJuOt0TNXL6tB7U2E8kvza5fFc9G7g=
 github.com/xyproto/cookie/v2 v2.2.7 h1:0Cj72/1ftzP0E/ca52YrF6RNyhMyCvl7fjPcvwsr9fE=
@@ -14,9 +14,9 @@ github.com/xyproto/randomstring v1.2.0 h1:y7PXAEBM3XlwJjPG2JQg4voxBYZ4+hPgRdGKCf
 github.com/xyproto/randomstring v1.2.0/go.mod h1:rgmS5DeNXLivK7YprL0pY+lTuhNQW3iGxZ18UQApw/E=
 github.com/xyproto/simplesqlite_noc v1.2.0 h1:d6n+wOBzhMw4uKml5wWhzrCw5u/h/BpsLrG3XqkmuAk=
 github.com/xyproto/simplesqlite_noc v1.2.0/go.mod h1:L3I43ZcTDC7HL9Jqy2mlbZENVnw9RVwPVO63FSwohcU=
-golang.org/x/crypto v0.50.0 h1:zO47/JPrL6vsNkINmLoo/PH1gcxpls50DNogFvB5ZGI=
-golang.org/x/crypto v0.50.0/go.mod h1:3muZ7vA7PBCE6xgPX7nkzzjiUq87kRItoJQM1Yo8S+Q=
-golang.org/x/sys v0.44.0 h1:ildZl3J4uzeKP07r2F++Op7E9B29JRUy+a27EibtBTQ=
-golang.org/x/sys v0.44.0/go.mod h1:4GL1E5IUh+htKOUEOaiffhrAeqysfVGipDYzABqnCmw=
-golang.org/x/text v0.36.0 h1:JfKh3XmcRPqZPKevfXVpI1wXPTqbkE5f7JA92a55Yxg=
-golang.org/x/text v0.36.0/go.mod h1:NIdBknypM8iqVmPiuco0Dh6P5Jcdk8lJL0CUebqK164=
+golang.org/x/crypto v0.53.0 h1:QZ4Muo8THX6CizN2vPPd5fBGHyogrdK9fG4wLPFUsto=
+golang.org/x/crypto v0.53.0/go.mod h1:DNLU434OwVakk9PzuwV8w62mAJpRJL3vsgcfp4Qnsio=
+golang.org/x/sys v0.46.0 h1:noSf2Fq6F8DBgS+LysIkx7rIExoNHJsxOAtPp4rthXw=
+golang.org/x/sys v0.46.0/go.mod h1:4GL1E5IUh+htKOUEOaiffhrAeqysfVGipDYzABqnCmw=
+golang.org/x/text v0.38.0 h1:sXmwo9DwP3OK9EZ7PqAdaooSGozfl/3a6/xJcbzPRhE=
+golang.org/x/text v0.38.0/go.mod h1:YXZt3QhHUKYT53r2lLKFIVi6Ao1jdzrTR/KQ09qyxF4=

@@ -8,7 +8,7 @@ import (
 	"time"
 	_ "unsafe"
 
-	sqlite3_wasm "github.com/ncruces/go-sqlite3-wasm/v2"
+	sqlite3_wasm "github.com/ncruces/go-sqlite3-wasm/v3"
 	"github.com/ncruces/go-sqlite3/internal/errutil"
 	"github.com/ncruces/go-sqlite3/internal/sqlite3_wrap"
 	"github.com/ncruces/go-sqlite3/vfs"
@@ -35,13 +35,16 @@ func createWrapper(ctx context.Context) (*sqlite3_wrap.Wrapper, error) {
 	if bits.UintSize < 64 {
 		mem.Max = 512 // 32MB
 	}
-	if max, ok := ctx.Value(configKey{}).(int64); ok {
-		mem.Max = max
-	}
 	mem.Grow(5, mem.Max) // 320KB
+
 	env := &env{&sqlite3_wrap.Wrapper{Memory: mem}}
 	env.Module = sqlite3_wasm.New(env)
 	env.X_initialize()
+
+	if cfg, ok := ctx.Value(configKey{}).(int64); ok {
+		mem.Max = max(cfg, int64(len(mem.Buf))/65536)
+		env.Xsqlite3_soft_heap_limit64((mem.Max - 8) * 65536)
+	}
 	return env.Wrapper, nil
 }
 
@@ -147,7 +150,7 @@ func (e *env) Xgo_file_size(v0, v1 int32) int32 {
 //go:linkname vfsLock github.com/ncruces/go-sqlite3/vfs.vfsLock
 func vfsLock(_ *sqlite3_wrap.Wrapper, v0, v1 int32) int32
 
-func (e *env) Xgo_lock(v0 int32, v1 int32) int32 {
+func (e *env) Xgo_lock(v0, v1 int32) int32 {
 	return vfsLock(e.Wrapper, v0, v1)
 }
 

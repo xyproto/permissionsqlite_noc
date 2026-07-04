@@ -146,7 +146,7 @@ func (c *Conn) FileControl(schema string, op FcntlOpcode, arg ...any) (any, erro
 		rc = res_t(c.wrp.Xsqlite3_file_control(
 			int32(c.handle), int32(schemaPtr),
 			int32(op), int32(ptr)))
-		ret = uint32(c.wrp.Read32(ptr))
+		ret = c.wrp.Read32(ptr)
 
 	case FCNTL_LOCKSTATE:
 		rc = res_t(c.wrp.Xsqlite3_file_control(
@@ -193,8 +193,7 @@ func (c *Conn) FileControl(schema string, op FcntlOpcode, arg ...any) (any, erro
 //
 // https://sqlite.org/c3ref/limit.html
 func (c *Conn) Limit(id LimitCategory, value int) int {
-	v := int32(c.wrp.Xsqlite3_limit(int32(c.handle), int32(id), int32(value)))
-	return int(v)
+	return int(c.wrp.Xsqlite3_limit(int32(c.handle), int32(id), int32(value)))
 }
 
 // SetAuthorizer registers an authorizer callback with the database connection.
@@ -236,7 +235,7 @@ func (e *env) Xgo_authorizer(pDB, action, zName3rd, zName4th, zSchema, zInner in
 // Trace registers a trace callback function against the database connection.
 //
 // https://sqlite.org/c3ref/trace_v2.html
-func (c *Conn) Trace(mask TraceEvent, cb func(evt TraceEvent, arg1 any, arg2 any) error) error {
+func (c *Conn) Trace(mask TraceEvent, cb func(evt TraceEvent, arg1, arg2 any) error) error {
 	rc := res_t(c.wrp.Xsqlite3_trace_go(int32(c.handle), int32(mask)))
 	if err := c.error(rc); err != nil {
 		return err

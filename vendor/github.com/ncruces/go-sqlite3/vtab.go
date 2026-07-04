@@ -28,7 +28,7 @@ func CreateModule[T VTab](db *Conn, name string, create, connect VTabConstructor
 		flags |= VTAB_CREATOR
 	}
 
-	vtab := reflect.TypeOf(connect).Out(0)
+	vtab := reflect.TypeFor[T]()
 	if implements[VTabDestroyer](vtab) {
 		flags |= VTAB_DESTROYER
 	}
@@ -58,16 +58,17 @@ func CreateModule[T VTab](db *Conn, name string, create, connect VTabConstructor
 	defer db.arena.Mark()()
 	namePtr := db.arena.String(name)
 	if connect != nil {
-		modulePtr = db.wrp.AddHandle(module[T]{create, connect})
+		modulePtr = db.wrp.AddHandle(vtabModule{
+			vtabConstructor(create),
+			vtabConstructor(connect)})
 	}
 	rc := res_t(db.wrp.Xsqlite3_create_module_go(int32(db.handle),
 		int32(namePtr), int32(flags), int32(modulePtr)))
 	return db.error(rc)
 }
 
-func implements[T any](typ reflect.Type) bool {
-	var ptr *T
-	return typ.Implements(reflect.TypeOf(ptr).Elem())
+func implements[I any](typ reflect.Type) bool {
+	return typ.Implements(reflect.TypeFor[I]())
 }
 
 // DeclareVTab declares the schema of a virtual table.
@@ -131,15 +132,6 @@ func (c *Conn) VTabConfig(op VTabConfigOption, args ...any) error {
 
 // VTabConstructor is a virtual table constructor function.
 type VTabConstructor[T VTab] func(db *Conn, module, schema, table string, arg ...string) (T, error)
-
-type module[T VTab] [2]VTabConstructor[T]
-
-type vtabConstructor int
-
-const (
-	xCreate  vtabConstructor = 0
-	xConnect vtabConstructor = 1
-)
 
 // A VTab describes a particular instance of the virtual table.
 // A VTab may optionally implement [io.Closer] to free resources.
@@ -307,17 +299,7 @@ type IndexConstraintUsage struct {
 //
 // https://sqlite.org/c3ref/vtab_rhs_value.html
 func (idx *IndexInfo) RHSValue(column int) (Value, error) {
-	defer idx.c.arena.Mark()()
-	valPtr := idx.c.arena.New(ptrlen)
-	rc := res_t(idx.c.wrp.Xsqlite3_vtab_rhs_value(int32(idx.handle),
-		int32(column), int32(valPtr)))
-	if err := idx.c.error(rc); err != nil {
-		return Value{}, err
-	}
-	return Value{
-		c:      idx.c,
-		handle: ptr_t(idx.c.wrp.Read32(valPtr)),
-	}, nil
+	return idx.c.columnValue(idx.c.wrp.Xsqlite3_vtab_rhs_value, idx.handle, column)
 }
 
 // Collation returns the name of the collation for a virtual table constraint.
@@ -333,16 +315,15 @@ func (idx *IndexInfo) Collation(column int) string {
 //
 // https://sqlite.org/c3ref/vtab_distinct.html
 func (idx *IndexInfo) Distinct() int {
-	i := int32(idx.c.wrp.Xsqlite3_vtab_distinct(int32(idx.handle)))
-	return int(i)
+	return int(idx.c.wrp.Xsqlite3_vtab_distinct(int32(idx.handle)))
 }
 
 // In identifies and handles IN constraints.
 //
 // https://sqlite.org/c3ref/vtab_in.html
 func (idx *IndexInfo) In(column, handle int) bool {
-	b := int32(idx.c.wrp.Xsqlite3_vtab_in(int32(idx.handle),
-		int32(column), int32(handle)))
+	b := idx.c.wrp.Xsqlite3_vtab_in(int32(idx.handle),
+		int32(column), int32(handle))
 	return b != 0
 }
 
@@ -444,31 +425,36 @@ const (
 	INDEX_SCAN_HEX    IndexScanFlag = 0x00000002
 )
 
-func (e *env) vtabModuleCallback(kind vtabConstructor, pMod, nArg, pArg, ppVTab, pzErr int32) int32 {
-	arg := make([]reflect.Value, 1+nArg)
-	arg[0] = reflect.ValueOf(e.DB)
+type vtabModule = [2]VTabConstructor[VTab]
 
+func vtabConstructor[T VTab](c VTabConstructor[T]) VTabConstructor[VTab] {
+	return func(db *Conn, module, schema, table string, arg ...string) (VTab, error) {
+		return c(db, module, schema, table, arg...)
+	}
+}
+
+func (e *env) vtabConstruct(fn VTabConstructor[VTab], nArg, pArg, ppVTab, pzErr int32) int32 {
+	arg := make([]string, nArg)
 	for i := range nArg {
 		ptr := ptr_t(e.Memory.Read32(ptr_t(pArg + i*ptrlen)))
-		arg[i+1] = reflect.ValueOf(e.ReadString(ptr, _MAX_SQL_LENGTH))
+		arg[i] = e.ReadString(ptr, _MAX_SQL_LENGTH)
 	}
 
-	module := e.vtabGetHandle(pMod)
-	val := reflect.ValueOf(module).Index(int(kind)).Call(arg)
-	err, _ := val[1].Interface().(error)
+	tab, err := fn(e.DB.(*Conn), arg[0], arg[1], arg[2], arg[3:]...)
 	if err == nil {
-		e.vtabPutHandle(ppVTab, val[0].Interface())
+		e.vtabPutHandle(ppVTab, tab)
 	}
-
 	return e.vtabError(pzErr, _PTR_ERROR, err, ERROR)
 }
 
 func (e *env) Xgo_vtab_create(pMod, nArg, pArg, ppVTab, pzErr int32) int32 {
-	return e.vtabModuleCallback(xCreate, pMod, nArg, pArg, ppVTab, pzErr)
+	module := e.vtabGetHandle(pMod).(vtabModule)
+	return e.vtabConstruct(module[0], nArg, pArg, ppVTab, pzErr)
 }
 
 func (e *env) Xgo_vtab_connect(pMod, nArg, pArg, ppVTab, pzErr int32) int32 {
-	return e.vtabModuleCallback(xConnect, pMod, nArg, pArg, ppVTab, pzErr)
+	module := e.vtabGetHandle(pMod).(vtabModule)
+	return e.vtabConstruct(module[1], nArg, pArg, ppVTab, pzErr)
 }
 
 func (e *env) Xgo_vtab_disconnect(pVTab int32) int32 {

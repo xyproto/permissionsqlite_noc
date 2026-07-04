@@ -34,6 +34,7 @@ type Conn struct {
 	update     func(AuthorizerActionCode, string, string, int64)
 	commit     func() bool
 	rollback   func()
+	preupdate  func(PreUpdateData)
 
 	busy1st time.Time
 	busylst time.Time
@@ -119,8 +120,8 @@ func (c *Conn) openDB(filename string, flags OpenFlag) (ptr_t, error) {
 	c.wrp.Xsqlite3_progress_handler_go(int32(handle), 1000)
 	if flags|OPEN_URI != 0 && strings.HasPrefix(filename, "file:") {
 		var pragmas strings.Builder
-		if _, after, ok := strings.Cut(filename, "?"); ok {
-			query, _ := url.ParseQuery(after)
+		if u, err := url.Parse(filename); err == nil {
+			query := u.Query()
 			for _, p := range query["_pragma"] {
 				pragmas.WriteString(`PRAGMA `)
 				pragmas.WriteString(p)
@@ -259,7 +260,7 @@ func (c *Conn) Filename(schema string) *vfs.Filename {
 // ReadOnly determines if a database is read-only.
 //
 // https://sqlite.org/c3ref/db_readonly.html
-func (c *Conn) ReadOnly(schema string) (ro bool, ok bool) {
+func (c *Conn) ReadOnly(schema string) (ro, ok bool) {
 	var ptr ptr_t
 	if schema != "" {
 		defer c.arena.Mark()()
@@ -506,7 +507,7 @@ func (c *Conn) errorFor(handle ptr_t, rc res_t, sql ...string) error {
 		}
 
 		if len(sql) != 0 {
-			if i := int32(c.wrp.Xsqlite3_error_offset(int32(handle))); i != -1 {
+			if i := c.wrp.Xsqlite3_error_offset(int32(handle)); i != -1 {
 				query = sql[0][i:]
 			}
 		}
